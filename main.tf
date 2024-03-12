@@ -28,21 +28,21 @@ resource "azurerm_firewall_policy" "azure_firewall_policy" {
     }
   }
 
-  dynamic "insights" {
-    for_each = each.value.insights
-    content {
-      enabled                            = insights.value.enabled
-      default_log_analytics_workspace_id = var.log_analytics_workspace_output[insights.value.default_log_analytics_workspace_name].id
-      retention_in_days                  = insights.value.retention_in_days
-      dynamic "log_analytics_workspace" {
-        for_each = insights.value.log_analytics_workspace
-        content {
-          id                = var.log_analytics_workspace_output[log_analytics_workspace.value.log_analytics_workspace_name].id
-          firewall_location = log_analytics_workspace.value.firewall_location
-        }
-      }
-    }
-  }
+  # dynamic "insights" {
+  #   for_each = each.value.insights
+  #   content {
+  #     enabled                            = insights.value.enabled
+  #     default_log_analytics_workspace_id = var.log_analytics_workspace_output[insights.value.default_log_analytics_workspace_name].id
+  #     retention_in_days                  = insights.value.retention_in_days
+  #     dynamic "log_analytics_workspace" {
+  #       for_each = insights.value.log_analytics_workspace
+  #       content {
+  #         id                = var.log_analytics_workspace_output[log_analytics_workspace.value.log_analytics_workspace_name].id
+  #         firewall_location = log_analytics_workspace.value.firewall_location
+  #       }
+  #     }
+  #   }
+  # }
 
   dynamic "intrusion_detection" {
     for_each = each.value.intrusion_detection
@@ -67,8 +67,8 @@ resource "azurerm_firewall_policy" "azure_firewall_policy" {
           destination_addresses = length(traffic_bypass.value.destination_addresses) == 0 ? null : traffic_bypass.value.destination_addresses
           destination_ip_groups = length(traffic_bypass.value.destination_ip_groups) == 0 ? null : traffic_bypass.value.destination_ip_groups
           destination_ports     = length(traffic_bypass.value.destination_ports) == 0 ? null : traffic_bypass.value.destination_ports
-          source_addresses      = length(traffic_bypass.value.source_addresses) == 0 ? null : traffic_bypass.value.source_addresses
-          source_ip_groups      = length(traffic_bypass.value.source_ip_groups) == 0 ? null : traffic_bypass.value.source_ip_groups
+          # source_addresses      = length(traffic_bypass.value.source_addresses) == 0 ? null : traffic_bypass.value.source_addresses
+          # source_ip_groups      = length(traffic_bypass.value.source_ip_groups) == 0 ? null : traffic_bypass.value.source_ip_groups
         }
       }
     }
