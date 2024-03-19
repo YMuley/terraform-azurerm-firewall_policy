@@ -24,7 +24,7 @@ resource "azurerm_firewall_policy" "azure_firewall_policy" {
     for_each = length(each.value.identity) == 0 ? [] : [{}]
     content {
       type         = "UserAssigned"
-      identity_ids = flatten([for user_identity in var.user_identity_output : user_identity.id if contains(each.value.identity, user_identity.name) == true])
+      //identity_ids = flatten([for user_identity in var.user_identity_output : user_identity.id if contains(each.value.identity, user_identity.name) == true])
     }
   }
 
@@ -44,57 +44,32 @@ resource "azurerm_firewall_policy" "azure_firewall_policy" {
   #   }
   # }
 
-  dynamic "intrusion_detection" {
-    for_each = each.value.intrusion_detection
-    content {
-      mode           = intrusion_detection.value.mode
-      private_ranges = intrusion_detection.value.private_ranges
-
-      dynamic "signature_overrides" {
-        for_each = intrusion_detection.value.signature_overrides
-        content {
-          id    = signature_overrides.value.id
-          state = signature_overrides.value.state
-        }
-      }
-
-      dynamic "traffic_bypass" {
-        for_each = intrusion_detection.value.traffic_bypass
-        content {
-          name                  = traffic_bypass.value.name
-          protocol              = traffic_bypass.value.protocol
-          description           = traffic_bypass.value.description
-          destination_addresses = length(traffic_bypass.value.destination_addresses) == 0 ? null : traffic_bypass.value.destination_addresses
-          # destination_ip_groups = length(traffic_bypass.value.destination_ip_groups) == 0 ? null : traffic_bypass.value.destination_ip_groups
-          destination_ports = length(traffic_bypass.value.destination_ports) == 0 ? null : traffic_bypass.value.destination_ports
-          # source_addresses      = length(traffic_bypass.value.source_addresses) == 0 ? null : traffic_bypass.value.source_addresses
-          # source_ip_groups      = length(traffic_bypass.value.source_ip_groups) == 0 ? null : traffic_bypass.value.source_ip_groups
-        }
-      }
-    }
-  }
-
-
-  # dynamic "tls_certificate" {
-  #   for_each = each.value.tls_certificate
+  # dynamic "intrusion_detection" {
+  #   for_each = each.value.intrusion_detection
   #   content {
-  #     key_vault_secret_id = format("https://%s.vault.azure.net/secrets/%s", tls_certificate.value.Key_vault_name, tls_certificate.value.secret_name)
-  #     name                = format("tls_certificate_name_%s_%s", tls_certificate.value.Key_vault_name, tls_certificate.value.key_vault_secret_name)
+  #     mode           = intrusion_detection.value.mode
+  #     private_ranges = intrusion_detection.value.private_ranges
+
+  #     dynamic "signature_overrides" {
+  #       for_each = intrusion_detection.value.signature_overrides
+  #       content {
+  #         id    = signature_overrides.value.id
+  #         state = signature_overrides.value.state
+  #       }
+  #     }
+
+  #     dynamic "traffic_bypass" {
+  #       for_each = intrusion_detection.value.traffic_bypass
+  #       content {
+  #         name                  = traffic_bypass.value.name
+  #         protocol              = traffic_bypass.value.protocol
+  #         description           = traffic_bypass.value.description
+  #         destination_addresses = length(traffic_bypass.value.destination_addresses) == 0 ? null : traffic_bypass.value.destination_addresses
+  #         destination_ports = length(traffic_bypass.value.destination_ports) == 0 ? null : traffic_bypass.value.destination_ports
+  #       }
+  #     }
   #   }
   # }
-
-  dynamic "explicit_proxy" {
-    for_each = each.value.explicit_proxy
-    content {
-      enabled         = explicit_proxy.value.enabled
-      http_port       = explicit_proxy.value.http_port
-      https_port      = explicit_proxy.value.https_port
-      enable_pac_file = explicit_proxy.value.enable_pac_file
-      pac_file_port   = explicit_proxy.value.pac_file_port
-      pac_file        = explicit_proxy.value.pac_file
-    }
-
-  }
 
   dynamic "threat_intelligence_allowlist" {
     for_each = each.value.threat_intelligence_allowlist
@@ -103,7 +78,6 @@ resource "azurerm_firewall_policy" "azure_firewall_policy" {
       ip_addresses = threat_intelligence_allowlist.value.ip_addresses
     }
   }
-
 
   tags = each.value.tags == null ? var.default_values.tags : each.value.tags
 
