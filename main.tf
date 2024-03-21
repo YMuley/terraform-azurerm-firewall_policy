@@ -68,7 +68,6 @@ resource "azurerm_firewall_policy" "azure_firewall_policy" {
                         destination_ip_groups  =length(traffic_bypass.value.destination_ip_groups) == 0 ? null : traffic_bypass.value.destination_ip_groups
                         destination_ports  = length(traffic_bypass.value.destination_ports) == 0 ? null : traffic_bypass.value.destination_ports
                         source_addresses   = length(traffic_bypass.value.source_addresses) == 0 ? null : traffic_bypass.value.source_addresses
-                        source_ip_groups   = length(traffic_bypass.value.source_ip_groups) == 0 ? null : traffic_bypass.value.source_ip_groups 
                     }
                 }
             }          
