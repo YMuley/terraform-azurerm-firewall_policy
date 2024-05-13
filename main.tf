@@ -72,13 +72,13 @@ resource "azurerm_firewall_policy" "azure_firewall_policy" {
   }
 
 
-  dynamic "tls_certificate" {
-    for_each = each.value.tls_certificate
-    content {
-      key_vault_secret_id = format("https://%s.vault.azure.net/secrets/%s", tls_certificate.value.Key_vault_name, tls_certificate.value.secret_name)
-      name                = format("tls_certificate_name_%s_%s", tls_certificate.value.Key_vault_name, tls_certificate.value.key_vault_secret_name)
-    }
-  }
+  # dynamic "tls_certificate" {
+  #   for_each = each.value.tls_certificate
+  #   content {
+  #     key_vault_secret_id = format("https://%s.vault.azure.net/secrets/%s", tls_certificate.value.Key_vault_name, tls_certificate.value.secret_name)
+  #     name                = format("tls_certificate_name_%s_%s", tls_certificate.value.Key_vault_name, tls_certificate.value.key_vault_secret_name)
+  #   }
+  # }
 
   # dynamic "explicit_proxy"  {
   #     for_each =  each.value.explicit_proxy
